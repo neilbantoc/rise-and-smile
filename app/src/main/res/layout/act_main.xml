@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:gravity="bottom"
         app:umanoParallaxOffset="24dp"
-        app:umanoScrollableView="@+id/alarm_list_container">
+        app:umanoScrollableView="@+id/alarm_list">
 
         <FrameLayout
             android:id="@+id/main_container"

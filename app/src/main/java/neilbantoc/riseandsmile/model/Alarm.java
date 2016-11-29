@@ -1,6 +1,7 @@
 package neilbantoc.riseandsmile.model;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by neilbantoc on 22/11/2016.
@@ -15,6 +16,7 @@ public class Alarm extends RealmObject{
     public static final int REPEAT_FRIDAY = 0x00 << 6;
     public static final int REPEAT_SATURDAY = 0x00 << 7;
 
+    @PrimaryKey
     private long mId;
     private long mTime;
     private boolean mActive;
@@ -33,7 +35,7 @@ public class Alarm extends RealmObject{
     }
 
     public void setTime(long time) {
-        this.mTime = mTime;
+        mTime = time;
     }
 
     public boolean isActive() {

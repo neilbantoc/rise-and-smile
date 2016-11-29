@@ -10,15 +10,15 @@ import neilbantoc.riseandsmile.model.Alarm;
 
 public interface AlarmList {
     interface View {
-        void showAddAlarmForm(Alarm draftAlarm);
+        void showAlarmDetail(Alarm alarmDetail);
         void showAlarmList(List<Alarm> alarms);
         void clearAlarmList();
     }
 
     interface UserActionCallback {
-        void setAlarm(Alarm alarm);
-        void deleteAlarm(Alarm alarm);
         void onShow();
+        void onAlarmClick(Alarm alarm);
         void onAddAlarmClick();
+        void onSaveAlarmClick(Alarm alarm);
     }
 }
