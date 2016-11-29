@@ -1,4 +1,4 @@
-package neilbantoc.riseandsmile.view;
+package neilbantoc.riseandsmile.view.alarmlist;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

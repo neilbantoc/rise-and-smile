@@ -19,7 +19,7 @@ import android.util.Log;
 
 import java.io.IOException;
 
-import neilbantoc.riseandsmile.view.AlarmActivity;
+import neilbantoc.riseandsmile.view.alarm.AlarmActivity;
 
 /**
  * Created by neilbantoc on 14/11/2016.

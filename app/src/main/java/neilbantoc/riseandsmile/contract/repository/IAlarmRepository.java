@@ -1,4 +1,4 @@
-package neilbantoc.riseandsmile.contract;
+package neilbantoc.riseandsmile.contract.repository;
 
 import java.util.List;
 

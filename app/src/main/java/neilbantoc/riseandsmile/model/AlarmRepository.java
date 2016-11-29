@@ -12,8 +12,8 @@ import java.util.List;
 
 import io.realm.Realm;
 import neilbantoc.riseandsmile.App;
-import neilbantoc.riseandsmile.contract.IAlarmRepository;
-import neilbantoc.riseandsmile.service.AlarmService;
+import neilbantoc.riseandsmile.contract.repository.IAlarmRepository;
+import neilbantoc.riseandsmile.view.alarm.AlarmActivity;
 
 /**
  * Created by neilbantoc on 23/11/2016.
@@ -30,7 +30,7 @@ public class AlarmRepository implements IAlarmRepository{
 
     public AlarmRepository(Context context) {
         mManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        mPendingIntent = PendingIntent.getService(context, REQUEST_CODE, new Intent(context, AlarmService.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        mPendingIntent = PendingIntent.getActivity(context, REQUEST_CODE, new Intent(context, AlarmActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
         mRealm = App.getRealm();
     }
 

@@ -6,6 +6,8 @@
     <color name="colorNeutral">#ebebeb</color>
     <color name="colorNeutralDark">#c0c0c0</color>
 
+    <color name="colorNeutralLight">#fafafa</color>
+
     <color name="colorAccentPink">#F40076</color>
     <color name="colorAccentOrange">#ff6700</color>
 </resources>

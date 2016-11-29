@@ -1,4 +1,4 @@
-package neilbantoc.riseandsmile.view;
+package neilbantoc.riseandsmile.view.alarmlist;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,12 +13,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import neilbantoc.riseandsmile.App;
 import neilbantoc.riseandsmile.R;
-import neilbantoc.riseandsmile.contract.AlarmList;
+import neilbantoc.riseandsmile.contract.alarm.AlarmList;
 import neilbantoc.riseandsmile.model.Alarm;
-import neilbantoc.riseandsmile.presenter.AlarmListPresenter;
+import neilbantoc.riseandsmile.presenter.alarmlist.AlarmListPresenter;
 
 /**
  * Created by neilbantoc on 22/11/2016.
@@ -72,6 +71,10 @@ public class AlarmListFragment extends Fragment implements AlarmList.View{
         mRecyclerView.setHasFixedSize(true);
     }
 
+    public void createNewAlarm() {
+        mAlarmListPresenter.onAddAlarmClick();
+    }
+
     @Override
     public void showAlarmDetail(Alarm alarm) {
         onSaveAlarmClick(alarm);
@@ -85,11 +88,6 @@ public class AlarmListFragment extends Fragment implements AlarmList.View{
     @Override
     public void clearAlarmList() {
         mAdapter.clearAlarms();
-    }
-
-    @OnClick(R.id.fab_add_alarm)
-    public void onAddAlarmClick() {
-        mAlarmListPresenter.onAddAlarmClick();
     }
 
     public void onSaveAlarmClick(Alarm alarm) {

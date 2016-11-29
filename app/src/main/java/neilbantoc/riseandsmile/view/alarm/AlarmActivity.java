@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package neilbantoc.riseandsmile.view;
+package neilbantoc.riseandsmile.view.alarm;
 
 import android.Manifest;
 import android.app.Activity;
@@ -47,15 +47,17 @@ import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import java.io.IOException;
 
 import neilbantoc.riseandsmile.R;
-import neilbantoc.riseandsmile.contract.AlarmScreen;
+import neilbantoc.riseandsmile.contract.alarmlist.AlarmScreen;
 import neilbantoc.riseandsmile.facetracker.SleepyFaceListener;
 import neilbantoc.riseandsmile.facetracker.SleepyFaceTracker;
-import neilbantoc.riseandsmile.presenter.AlarmActivityPresenter;
+import neilbantoc.riseandsmile.presenter.alarm.AlarmActivityPresenter;
 import neilbantoc.riseandsmile.service.AlarmService;
 import neilbantoc.riseandsmile.view.custom.CameraSourcePreview;
 import neilbantoc.riseandsmile.view.custom.CircularProgressBar;
 
 public final class AlarmActivity extends AppCompatActivity implements AlarmScreen.View{
+    private static final String EXTRA_IS_TUTORIAL = "extra_tutorial";
+
     private static final String TAG = "AlarmActivity";
 
     private static final int RC_HANDLE_GMS = 9001;
@@ -84,6 +86,8 @@ public final class AlarmActivity extends AppCompatActivity implements AlarmScree
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_alarm);
 
+        AlarmService.start(this);
+
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mTimeBar = (CircularProgressBar) findViewById(R.id.timeBar);
         mTimeBar.setMax(PROGRESS_BAR_RANGE);
@@ -101,6 +105,7 @@ public final class AlarmActivity extends AppCompatActivity implements AlarmScree
         } else {
             requestCameraPermission();
         }
+
     }
 
     /**
@@ -178,7 +183,6 @@ public final class AlarmActivity extends AppCompatActivity implements AlarmScree
         if (mCameraSource != null) {
             mCameraSource.release();
         }
-        stopService(new Intent(this, AlarmService.class));
     }
 
     @Override
@@ -346,5 +350,11 @@ public final class AlarmActivity extends AppCompatActivity implements AlarmScree
                 mCameraSource = null;
             }
         }
+    }
+
+    public static void showTutorial(Context context) {
+        Intent intent = new Intent(context, AlarmActivity.class);
+        intent.putExtra(EXTRA_IS_TUTORIAL, true);
+        context.startActivity(intent);
     }
 }

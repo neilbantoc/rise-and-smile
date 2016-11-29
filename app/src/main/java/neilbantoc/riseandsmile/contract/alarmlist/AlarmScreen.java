@@ -1,4 +1,4 @@
-package neilbantoc.riseandsmile.contract;
+package neilbantoc.riseandsmile.contract.alarmlist;
 
 /**
  * Created by neilbantoc on 22/11/2016.

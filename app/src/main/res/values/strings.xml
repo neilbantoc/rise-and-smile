@@ -6,4 +6,5 @@
     <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
     <string name="alarm_end_prompt">You win this time...</string>
     <string name="alarm_list_title_alarms">Alarms</string>
+    <string name="tag_alarms_list">alarms_list</string>
 </resources>

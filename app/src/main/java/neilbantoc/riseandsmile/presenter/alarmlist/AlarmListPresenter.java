@@ -1,9 +1,7 @@
-package neilbantoc.riseandsmile.presenter;
+package neilbantoc.riseandsmile.presenter.alarmlist;
 
-import android.util.Log;
-
-import neilbantoc.riseandsmile.contract.AlarmList;
-import neilbantoc.riseandsmile.contract.IAlarmRepository;
+import neilbantoc.riseandsmile.contract.alarm.AlarmList;
+import neilbantoc.riseandsmile.contract.repository.IAlarmRepository;
 import neilbantoc.riseandsmile.model.Alarm;
 
 /**
@@ -33,7 +31,6 @@ public class AlarmListPresenter implements AlarmList.UserActionCallback{
         // clear and refresh alarm list
         mView.clearAlarmList();
         mView.showAlarmList(mRepository.getAllAlarms());
-        Log.d(TAG, "onShow: NumAlarms: " + mRepository.getAllAlarms().size());
     }
 
     @Override

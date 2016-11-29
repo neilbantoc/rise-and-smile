@@ -1,11 +1,11 @@
-package neilbantoc.riseandsmile.presenter;
+package neilbantoc.riseandsmile.presenter.alarm;
 
 import android.animation.ValueAnimator;
 import android.os.Handler;
 import android.util.Log;
 import android.view.animation.LinearInterpolator;
 
-import neilbantoc.riseandsmile.contract.AlarmScreen;
+import neilbantoc.riseandsmile.contract.alarmlist.AlarmScreen;
 import neilbantoc.riseandsmile.facetracker.SleepyFaceListener;
 
 /**

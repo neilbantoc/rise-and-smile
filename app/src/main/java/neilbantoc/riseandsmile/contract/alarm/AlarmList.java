@@ -1,4 +1,4 @@
-package neilbantoc.riseandsmile.contract;
+package neilbantoc.riseandsmile.contract.alarm;
 
 import java.util.List;
 
