@@ -6,6 +6,5 @@ package neilbantoc.riseandsmile.facetracker;
 
 public interface SleepyFaceListener {
     void onEyeStateChange(boolean open, int openEyeCount);
-
     void onFaceStateChange(boolean missing);
 }

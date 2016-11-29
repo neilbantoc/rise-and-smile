@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package neilbantoc.riseandsmile.activity;
+package neilbantoc.riseandsmile.view;
 
 import android.Manifest;
 import android.app.Activity;
@@ -47,12 +47,15 @@ import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import java.io.IOException;
 
 import neilbantoc.riseandsmile.R;
+import neilbantoc.riseandsmile.contract.AlarmScreen;
+import neilbantoc.riseandsmile.facetracker.SleepyFaceListener;
 import neilbantoc.riseandsmile.facetracker.SleepyFaceTracker;
+import neilbantoc.riseandsmile.presenter.AlarmActivityPresenter;
 import neilbantoc.riseandsmile.service.AlarmService;
-import neilbantoc.riseandsmile.views.CameraSourcePreview;
-import neilbantoc.riseandsmile.views.CircularProgressBar;
+import neilbantoc.riseandsmile.view.custom.CameraSourcePreview;
+import neilbantoc.riseandsmile.view.custom.CircularProgressBar;
 
-public final class AlarmActivity extends AppCompatActivity {
+public final class AlarmActivity extends AppCompatActivity implements AlarmScreen.View{
     private static final String TAG = "AlarmActivity";
 
     private static final int RC_HANDLE_GMS = 9001;
@@ -74,12 +77,12 @@ public final class AlarmActivity extends AppCompatActivity {
     private CircularProgressBar mTimeBar;
     private CircularProgressBar mVolumeBar;
 
-    private AlarmActivityPresenter mPresenter;
+    private AlarmScreen.UserActionsCallback mPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.act_alarm);
 
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mTimeBar = (CircularProgressBar) findViewById(R.id.timeBar);
@@ -239,11 +242,23 @@ public final class AlarmActivity extends AppCompatActivity {
                 .show();
     }
 
-    public void onValueChanged(float value) {
+    public void showAwakeLevel(float value) {
         mTimeBar.setProgress(value * PROGRESS_BAR_RANGE);
     }
 
-    public void onVolumeChanged(float volume) {
+    @Override
+    public void changeVolume(float level) {
+        AlarmService.setLevel(this, level);
+    }
+
+    @Override
+    public void closeAlarmScreen() {
+        Toast.makeText(this, R.string.alarm_end_prompt, Toast.LENGTH_LONG).show();
+        AlarmService.stop(this);
+        finish();
+    }
+
+    public void showVolumeLevel(float volume) {
         mVolumeBar.setProgress(volume * PROGRESS_BAR_RANGE);
     }
 
@@ -268,7 +283,7 @@ public final class AlarmActivity extends AppCompatActivity {
                 .build();
 
         Detector.Processor<Face> processor;
-        Tracker<Face> tracker = new SleepyFaceTracker(mPresenter, mPreview);
+        Tracker<Face> tracker = new SleepyFaceTracker((SleepyFaceListener) mPresenter, mPreview);
         processor = new LargestFaceFocusingProcessor.Builder(detector, tracker).build();
         detector.setProcessor(processor);
 
@@ -318,8 +333,7 @@ public final class AlarmActivity extends AppCompatActivity {
         // check that the device has play services available.
         int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getApplicationContext());
         if (code != ConnectionResult.SUCCESS) {
-            Dialog dlg =
-                    GoogleApiAvailability.getInstance().getErrorDialog(this, code, RC_HANDLE_GMS);
+            Dialog dlg = GoogleApiAvailability.getInstance().getErrorDialog(this, code, RC_HANDLE_GMS);
             dlg.show();
         }
 

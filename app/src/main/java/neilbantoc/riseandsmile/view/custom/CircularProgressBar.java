@@ -1,4 +1,4 @@
-package neilbantoc.riseandsmile.views;
+package neilbantoc.riseandsmile.view.custom;
 
 import android.content.Context;
 import android.content.res.TypedArray;

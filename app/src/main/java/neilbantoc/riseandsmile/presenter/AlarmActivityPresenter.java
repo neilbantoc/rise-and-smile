@@ -1,20 +1,18 @@
-package neilbantoc.riseandsmile.activity;
+package neilbantoc.riseandsmile.presenter;
 
 import android.animation.ValueAnimator;
 import android.os.Handler;
 import android.util.Log;
 import android.view.animation.LinearInterpolator;
-import android.widget.Toast;
 
-import neilbantoc.riseandsmile.R;
+import neilbantoc.riseandsmile.contract.AlarmScreen;
 import neilbantoc.riseandsmile.facetracker.SleepyFaceListener;
-import neilbantoc.riseandsmile.service.AlarmService;
 
 /**
  * Created by neilbantoc on 16/11/2016.
  */
 
-public class AlarmActivityPresenter implements SleepyFaceListener {
+public class AlarmActivityPresenter implements SleepyFaceListener, AlarmScreen.UserActionsCallback{
     private static final String TAG = AlarmActivityPresenter.class.getSimpleName();
     private static final int STATE_MISSING = 0x00;
     private static final int STATE_AWAKE = 0x01;
@@ -26,7 +24,7 @@ public class AlarmActivityPresenter implements SleepyFaceListener {
     private static final long RESET_ANIMATION_DURATION = 8 * 1000; // how long both the awake progress and the volume progress animate back to 100% from its current value
     private static final int RESET_VOLUME_SCALE = 4; // how faster the volume animates back to 100% compared to the awake progress when resetting
 
-    private AlarmActivity mActivity;
+    private AlarmScreen.View mView;
 
     private Handler mHandler;
 
@@ -93,9 +91,9 @@ public class AlarmActivityPresenter implements SleepyFaceListener {
         }
     };
 
-    public AlarmActivityPresenter(AlarmActivity activity) {
+    public AlarmActivityPresenter(AlarmScreen.View view) {
         mHandler = new Handler();
-        mActivity = activity;
+        mView = view;
 
         mAwakeAnimator = ValueAnimator.ofFloat(1, 0);
         mAwakeAnimator.setInterpolator(new LinearInterpolator());
@@ -184,17 +182,15 @@ public class AlarmActivityPresenter implements SleepyFaceListener {
 
     private void updateAwakeLevel(float value) {
         mAwakeProgress = value;
-        mActivity.onValueChanged(value);
+        mView.showAwakeLevel(value);
         if (value == 0) {
-            AlarmService.stop(mActivity);
-            mActivity.finish();
-            Toast.makeText(mActivity, R.string.alarm_end_prompt, Toast.LENGTH_LONG).show();
+            mView.closeAlarmScreen();
         }
     }
 
     private void updateVolumeLevel(float value) {
         mVolumeProgress = value;
-        mActivity.onVolumeChanged(value);
-        AlarmService.setLevel(mActivity, value);
+        mView.showVolumeLevel(value);
+        mView.changeVolume(value);
     }
 }

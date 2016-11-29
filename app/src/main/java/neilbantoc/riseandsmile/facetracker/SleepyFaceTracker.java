@@ -11,7 +11,7 @@ import com.google.android.gms.vision.face.Landmark;
 import java.util.HashMap;
 import java.util.Map;
 
-import neilbantoc.riseandsmile.views.CameraSourcePreview;
+import neilbantoc.riseandsmile.view.custom.CameraSourcePreview;
 
 /**
  * Created by neilbantoc on 12/11/2016.

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/topLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <neilbantoc.riseandsmile.view.custom.CameraSourcePreview
+        android:id="@+id/preview"
+        android:layout_centerInParent="true"
+        android:layout_width="144dp"
+        android:layout_height="144dp"/>
+
+    <neilbantoc.riseandsmile.view.custom.CircularMask
+        android:layout_centerInParent="true"
+        android:layout_width="144dp"
+        android:layout_height="144dp"/>
+
+    <neilbantoc.riseandsmile.view.custom.CircularProgressBar
+        android:id="@+id/timeBar"
+        android:layout_width="176dp"
+        android:layout_height="176dp"
+        android:layout_centerInParent="true"
+        app:progressBarThickness="16dp"
+        app:progressBarColor="@color/colorPrimary"/>
+
+    <neilbantoc.riseandsmile.view.custom.CircularProgressBar
+        android:id="@+id/volumeBar"
+        android:layout_width="188dp"
+        android:layout_height="188dp"
+        android:layout_centerInParent="true"
+        app:progressBarThickness="6dp"
+        app:progressBarColor="@color/colorAccent"/>
+
+</RelativeLayout>
