@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                tools:ignore="MissingPrefix">
 
     <TimePicker
         android:id="@+id/time_picker"
@@ -13,28 +15,35 @@
     <TextView
         android:id="@+id/cancel"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        fontPath="roboto-regular.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/time_picker"
         android:layout_toLeftOf="@+id/delete"
-        android:text="@string/cancel"/>
+        android:minWidth="72dp"
+        android:text="@string/cancel"
+        />
 
     <TextView
         android:id="@+id/delete"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        fontPath="roboto-regular.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/time_picker"
         android:layout_toLeftOf="@+id/save"
+        android:minWidth="72dp"
         android:text="@string/delete"/>
 
     <TextView
         android:id="@+id/save"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        fontPath="roboto-regular.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/time_picker"
+        android:minWidth="72dp"
         android:text="@string/save"/>
 
 </RelativeLayout>

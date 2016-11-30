@@ -48,10 +48,7 @@ public class AlarmListPresenter implements AlarmList.UserActionCallback{
     public void onSaveAlarmClick(Alarm alarm) {
         alarm.setTimeRelativeToNow();
 
-        if (alarm.isActive()) {
-            mRepository.armAlarm(alarm);
-            mView.showNextAlarmTime(alarm);
-        }
+        armAlarmIfActive(alarm);
 
         if (alarm.equals(mDraftAlarm)) {
             mRepository.createAlarm(alarm);
@@ -78,13 +75,19 @@ public class AlarmListPresenter implements AlarmList.UserActionCallback{
         }
     }
 
+    private void armAlarmIfActive(Alarm alarm) {
+        if (alarm.isActive()) {
+            mRepository.armAlarm(alarm);
+            mView.showNextAlarmTime(alarm);
+        }
+    }
+
     @Override
     public void onToggleAlarmClick(Alarm alarm) {
         alarm.setActive(!alarm.isActive());
+        alarm.setTimeRelativeToNow();
         mRepository.updateAlarm(alarm);
-        if (alarm.isActive()) {
-            mRepository.armAlarm(alarm);
-        }
+        armAlarmIfActive(alarm);
         refreshList(false);
     }
 }

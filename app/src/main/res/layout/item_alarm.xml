@@ -12,22 +12,23 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:minHeight="48dp"
         android:minWidth="48dp"
         android:scaleType="centerInside"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/ic_alarm"/>
+        android:src="@drawable/ic_alarm"
+        />
 
     <TextView
         android:id="@+id/time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:layout_toRightOf="@id/toggle"
         android:gravity="center_vertical"
+        android:padding="8dp"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
         android:textSize="32dp"
-        android:layout_toRightOf="@id/toggle"
         tools:text="2:00"/>
 
 </RelativeLayout>
