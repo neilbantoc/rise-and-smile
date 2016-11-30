@@ -7,4 +7,8 @@
     <string name="alarm_end_prompt">You win this time...</string>
     <string name="alarm_list_title_alarms">Alarms</string>
     <string name="tag_alarms_list">alarms_list</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="main_title">Rise\nand\nSmile</string>
 </resources>

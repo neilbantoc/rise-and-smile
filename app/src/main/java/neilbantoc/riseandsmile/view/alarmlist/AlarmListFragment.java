@@ -1,10 +1,13 @@
 package neilbantoc.riseandsmile.view.alarmlist;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +26,7 @@ import neilbantoc.riseandsmile.presenter.alarmlist.AlarmListPresenter;
  * Created by neilbantoc on 22/11/2016.
  */
 
-public class AlarmListFragment extends Fragment implements AlarmList.View{
+public class AlarmListFragment extends Fragment implements AlarmList.View, DialogInterface.OnClickListener, AlarmListAdapter.OnAlarmClickListener {
     private static final String TAG = AlarmListFragment.class.getSimpleName();
 
     private AlarmListPresenter mAlarmListPresenter;
@@ -32,7 +35,7 @@ public class AlarmListFragment extends Fragment implements AlarmList.View{
 
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private Alarm mCurrentlyOpenedAlarm;
+    private AlarmDetailFragment mAlarmDetailFragment;
 
     @BindView(R.id.alarm_list)
     RecyclerView mRecyclerView;
@@ -41,6 +44,8 @@ public class AlarmListFragment extends Fragment implements AlarmList.View{
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mAlarmListPresenter = new AlarmListPresenter(this, App.getAlarmRepository());
+        mAlarmDetailFragment = new AlarmDetailFragment();
+        mAlarmDetailFragment.setOnClickListener(this);
     }
 
     @Override
@@ -63,6 +68,7 @@ public class AlarmListFragment extends Fragment implements AlarmList.View{
 
         if (mAdapter == null) {
             mAdapter = new AlarmListAdapter();
+            mAdapter.setOnAlarmClickListener(this);
             mLayoutManager = new LinearLayoutManager(getActivity());
         }
 
@@ -77,7 +83,8 @@ public class AlarmListFragment extends Fragment implements AlarmList.View{
 
     @Override
     public void showAlarmDetail(Alarm alarm) {
-        onSaveAlarmClick(alarm);
+        mAlarmDetailFragment.setAlarm(alarm);
+        mAlarmDetailFragment.show(getChildFragmentManager(), "detail");
     }
 
     @Override
@@ -90,9 +97,37 @@ public class AlarmListFragment extends Fragment implements AlarmList.View{
         mAdapter.clearAlarms();
     }
 
-    public void onSaveAlarmClick(Alarm alarm) {
-        alarm.setActive(true);
-        alarm.setTime(System.currentTimeMillis() + 1000);
-        mAlarmListPresenter.onSaveAlarmClick(alarm);
+    @Override
+    public void refreshAlarmList() {
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showNextAlarmTime(Alarm alarm) {
+        long now = System.currentTimeMillis();
+        now = now - now % Alarm.MINUTE_IN_MILLIS;
+        String text = "Next alarm will be " + DateUtils.getRelativeTimeSpanString(alarm.getTime(), now, Alarm.MINUTE_IN_MILLIS);
+        Snackbar.make(getView(), text, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+        Alarm alarm = mAlarmDetailFragment.getAlarm();
+        if (i == DialogInterface.BUTTON_POSITIVE) {
+            alarm.setActive(true);
+            mAlarmListPresenter.onSaveAlarmClick(alarm);
+        } else if (i == DialogInterface.BUTTON_NEUTRAL) {
+            mAlarmListPresenter.onDeleteAlarmClick(alarm);
+        }
+    }
+
+    @Override
+    public void onAlarmClick(Alarm alarm) {
+        mAlarmListPresenter.onAlarmClick(alarm);
+    }
+
+    @Override
+    public void onToggleAlarmClick(Alarm alarm) {
+        mAlarmListPresenter.onToggleAlarmClick(alarm);
     }
 }

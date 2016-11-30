@@ -13,6 +13,8 @@ public interface AlarmList {
         void showAlarmDetail(Alarm alarmDetail);
         void showAlarmList(List<Alarm> alarms);
         void clearAlarmList();
+        void refreshAlarmList();
+        void showNextAlarmTime(Alarm alarm);
     }
 
     interface UserActionCallback {
@@ -20,5 +22,7 @@ public interface AlarmList {
         void onAlarmClick(Alarm alarm);
         void onAddAlarmClick();
         void onSaveAlarmClick(Alarm alarm);
+        void onDeleteAlarmClick(Alarm alarm);
+        void onToggleAlarmClick(Alarm alarm);
     }
 }

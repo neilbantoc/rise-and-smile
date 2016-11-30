@@ -8,6 +8,7 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import io.realm.Realm;
 import neilbantoc.riseandsmile.model.AlarmRepository;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * Created by neilbantoc on 23/11/2016.
@@ -30,6 +31,12 @@ public class App extends MultiDexApplication{
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                         .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
                         .build());
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("rajdhani-regular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
 
         sAlarmRepository = new AlarmRepository(this);
         sContext = this;

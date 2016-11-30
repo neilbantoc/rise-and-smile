@@ -12,13 +12,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import neilbantoc.riseandsmile.R;
+import neilbantoc.riseandsmile.view.BaseActivity;
 import neilbantoc.riseandsmile.view.alarm.AlarmActivity;
 
 /**
  * Created by neilbantoc on 17/11/2016.
  */
 
-public class MainActivity extends AppCompatActivity implements SlidingUpPanelLayout.PanelSlideListener {
+public class MainActivity extends BaseActivity implements SlidingUpPanelLayout.PanelSlideListener {
 
     @BindView(R.id.sliding_up_panel_layout)
     SlidingUpPanelLayout mSlidingUpPanelLayout;

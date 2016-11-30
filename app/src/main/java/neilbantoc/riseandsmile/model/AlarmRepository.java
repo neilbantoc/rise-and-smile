@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -65,7 +64,9 @@ public class AlarmRepository implements IAlarmRepository{
 
     @Override
     public void deleteAlarm(Alarm alarm) {
-        alarm.deleteFromRealm();
+        mRealm.beginTransaction();
+        mRealm.where(Alarm.class).equalTo("mId", alarm.getId()).findAll().deleteAllFromRealm();
+        mRealm.commitTransaction();
     }
 
     @Override
@@ -75,6 +76,6 @@ public class AlarmRepository implements IAlarmRepository{
 
     @Override
     public List<Alarm> getAllAlarms() {
-        return new ArrayList<>(mRealm.where(Alarm.class).findAll());
+        return mRealm.copyFromRealm(mRealm.where(Alarm.class).findAll());
     }
 }

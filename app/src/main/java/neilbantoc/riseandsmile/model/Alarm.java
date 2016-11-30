@@ -1,6 +1,11 @@
 package neilbantoc.riseandsmile.model;
 
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.GregorianCalendar;
+
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -15,12 +20,29 @@ public class Alarm extends RealmObject{
     public static final int REPEAT_THURSDAY = 0x00 << 5;
     public static final int REPEAT_FRIDAY = 0x00 << 6;
     public static final int REPEAT_SATURDAY = 0x00 << 7;
+    public static final long MINUTE_IN_MILLIS = 60 * 1000;
+    public static final long HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60;
+    public static final long DAY_IN_MILLIS = HOUR_IN_MILLIS * 24;
 
     @PrimaryKey
     private long mId;
     private long mTime;
     private boolean mActive;
     private int mRepeatDays;
+
+    public static Comparator<Alarm> SORTER = new Comparator<Alarm>() {
+        @Override
+        public int compare(Alarm alarm, Alarm t1) {
+            return (int) (alarm.getTime() % DAY_IN_MILLIS - t1.getTime() % DAY_IN_MILLIS);
+        }
+    };
+
+    @Ignore
+    private GregorianCalendar mCalendar;
+
+    public Alarm() {
+        mCalendar = new GregorianCalendar();
+    }
 
     public long getId() {
         return mId;
@@ -34,8 +56,46 @@ public class Alarm extends RealmObject{
         return mTime;
     }
 
+    public GregorianCalendar getTimeAsCalendar() {
+        mCalendar.setTimeInMillis(mTime);
+        return mCalendar;
+    }
+
+    public int getHour() {
+        mCalendar.setTimeInMillis(mTime);
+        return mCalendar.get(Calendar.HOUR_OF_DAY);
+    }
+
+    public int getMinute() {
+        mCalendar.setTimeInMillis(mTime);
+        return mCalendar.get(Calendar.MINUTE);
+    }
+
     public void setTime(long time) {
-        mTime = time;
+        mTime = time - (time % MINUTE_IN_MILLIS);
+    }
+
+    public void setTimeRelativeToNow() {
+        setTimeRelativeToNow(getHour(), getMinute());
+    }
+
+    public void setTimeRelativeToNow(int hourOfDay, int minute) {
+        GregorianCalendar targetTime = new GregorianCalendar();
+        targetTime.setTimeInMillis(System.currentTimeMillis());
+
+        targetTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        targetTime.set(Calendar.MINUTE, minute);
+
+        //ToDo: account for repeating alarms
+
+        GregorianCalendar currentTime = new GregorianCalendar();
+        currentTime.setTimeInMillis(System.currentTimeMillis());
+
+        if (targetTime.before(currentTime)) {
+            targetTime.add(Calendar.DATE, 1);
+        }
+
+        setTime(targetTime.getTimeInMillis());
     }
 
     public boolean isActive() {

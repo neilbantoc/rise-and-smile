@@ -29,7 +29,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -52,10 +51,11 @@ import neilbantoc.riseandsmile.facetracker.SleepyFaceListener;
 import neilbantoc.riseandsmile.facetracker.SleepyFaceTracker;
 import neilbantoc.riseandsmile.presenter.alarm.AlarmActivityPresenter;
 import neilbantoc.riseandsmile.service.AlarmService;
+import neilbantoc.riseandsmile.view.BaseActivity;
 import neilbantoc.riseandsmile.view.custom.CameraSourcePreview;
 import neilbantoc.riseandsmile.view.custom.CircularProgressBar;
 
-public final class AlarmActivity extends AppCompatActivity implements AlarmScreen.View{
+public final class AlarmActivity extends BaseActivity implements AlarmScreen.View{
     private static final String EXTRA_IS_TUTORIAL = "extra_tutorial";
 
     private static final String TAG = "AlarmActivity";
@@ -183,6 +183,8 @@ public final class AlarmActivity extends AppCompatActivity implements AlarmScree
         if (mCameraSource != null) {
             mCameraSource.release();
         }
+        ((AlarmActivityPresenter)mPresenter).resetAnimators();
+        AlarmService.stop(this);
     }
 
     @Override

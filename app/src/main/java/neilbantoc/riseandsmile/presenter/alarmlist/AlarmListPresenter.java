@@ -40,20 +40,51 @@ public class AlarmListPresenter implements AlarmList.UserActionCallback{
 
     @Override
     public void onAddAlarmClick() {
+        mDraftAlarm.setTime(System.currentTimeMillis());
         mView.showAlarmDetail(mDraftAlarm);
     }
 
     @Override
     public void onSaveAlarmClick(Alarm alarm) {
+        alarm.setTimeRelativeToNow();
+
         if (alarm.isActive()) {
             mRepository.armAlarm(alarm);
+            mView.showNextAlarmTime(alarm);
         }
 
         if (alarm.equals(mDraftAlarm)) {
             mRepository.createAlarm(alarm);
             createNewDraftAlarm();
+            refreshList(true);
         } else {
             mRepository.updateAlarm(alarm);
+            refreshList(false);
         }
+    }
+
+    @Override
+    public void onDeleteAlarmClick(Alarm alarm) {
+        mRepository.deleteAlarm(alarm);
+        refreshList(true);
+    }
+
+    private void refreshList(boolean reload) {
+        if (reload) {
+            mView.clearAlarmList();
+            mView.showAlarmList(mRepository.getAllAlarms());
+        } else {
+            mView.refreshAlarmList();
+        }
+    }
+
+    @Override
+    public void onToggleAlarmClick(Alarm alarm) {
+        alarm.setActive(!alarm.isActive());
+        mRepository.updateAlarm(alarm);
+        if (alarm.isActive()) {
+            mRepository.armAlarm(alarm);
+        }
+        refreshList(false);
     }
 }
