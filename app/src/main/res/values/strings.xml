@@ -11,4 +11,6 @@
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="main_title">Rise\nand\nSmile</string>
+    <string name="title_keep_eyes_open">Keep Eyes Open</string>
+    <string name="message_alarm_activity_help">The volume and countdown timer will only go down if the app can detect that your eyes are open</string>
 </resources>

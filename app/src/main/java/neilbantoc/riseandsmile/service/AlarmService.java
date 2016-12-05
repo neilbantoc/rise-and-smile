@@ -19,6 +19,10 @@ import android.util.Log;
 
 import java.io.IOException;
 
+import neilbantoc.riseandsmile.App;
+import neilbantoc.riseandsmile.contract.repository.IAlarmRepository;
+import neilbantoc.riseandsmile.model.Alarm;
+import neilbantoc.riseandsmile.model.AlarmRepository;
 import neilbantoc.riseandsmile.view.alarm.AlarmActivity;
 
 /**
@@ -76,6 +80,12 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
         context.startService(new Intent(context, AlarmService.class));
     }
 
+    public static void start(Context context, long alarmId) {
+        Intent intent = new Intent(context, AlarmService.class);
+        intent.putExtra(AlarmRepository.EXTRA_ALARM_ID, alarmId);
+        context.startService(intent);
+    }
+
     public static void stop(Context context) {
         context.stopService(new Intent(context, AlarmService.class));
     }
@@ -93,6 +103,27 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
         prepareVibrator();
         prepareBroadcastReciever();
         startAlarmActivity();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        disarmAlarm(intent);
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void disarmAlarm(Intent intent) {
+        long alarmId = intent.hasExtra(AlarmRepository.EXTRA_ALARM_ID) ? intent.getLongExtra(AlarmRepository.EXTRA_ALARM_ID, -1) : -1;
+        if (alarmId > 0) {
+            Log.d(TAG, "disarmAlarm: id: " + alarmId);
+            IAlarmRepository repository = App.getAlarmRepository();
+            Alarm alarm = repository.getAlarm(alarmId);
+            if (alarm != null) {
+                repository.disarmAlarm(alarm);
+                alarm.setActive(false);
+                repository.updateAlarm(alarm);
+                Log.d(TAG, "disarmAlarm: active: " + alarm.isActive());
+            }
+        }
     }
 
     private void prepareMediaPlayer() {

@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 
 import java.util.List;
 
@@ -19,6 +18,7 @@ import neilbantoc.riseandsmile.view.alarm.AlarmActivity;
  */
 
 public class AlarmRepository implements IAlarmRepository{
+    public static final String EXTRA_ALARM_ID = "alarm_id";
     private static final String TAG = AlarmRepository.class.getSimpleName();
 
     private static final int REQUEST_CODE = 0x01;
@@ -27,24 +27,33 @@ public class AlarmRepository implements IAlarmRepository{
     private AlarmManager mManager;
     private Realm mRealm;
 
+    private Context mContext;
+
     public AlarmRepository(Context context) {
         mManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        mPendingIntent = PendingIntent.getActivity(context, REQUEST_CODE, new Intent(context, AlarmActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
         mRealm = App.getRealm();
+        mContext = context;
+    }
+
+    private PendingIntent updatePendingIntent(Alarm alarm) {
+        Intent intent = new Intent(mContext, AlarmActivity.class);
+        intent.putExtra(EXTRA_ALARM_ID, alarm.getId());
+        mPendingIntent = PendingIntent.getActivity(mContext, REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return mPendingIntent;
     }
 
     @Override
     public void armAlarm(Alarm alarm) {
         if (Build.VERSION.SDK_INT > 18) {
-            mManager.setExact(AlarmManager.RTC_WAKEUP, alarm.getTime(), mPendingIntent);
+            mManager.setExact(AlarmManager.RTC_WAKEUP, alarm.getTime(), updatePendingIntent(alarm));
         } else {
-            mManager.set(AlarmManager.RTC_WAKEUP, alarm.getTime(), mPendingIntent);
+            mManager.set(AlarmManager.RTC_WAKEUP, alarm.getTime(), updatePendingIntent(alarm));
         }
     }
 
     @Override
     public void disarmAlarm(Alarm alarm) {
-        mManager.cancel(mPendingIntent);
+        mManager.cancel(updatePendingIntent(alarm));
     }
 
     @Override
@@ -59,7 +68,6 @@ public class AlarmRepository implements IAlarmRepository{
         mRealm.beginTransaction();
         mRealm.insertOrUpdate(alarm);
         mRealm.commitTransaction();
-        Log.e(TAG, "updateAlarm: Size: " + mRealm.where(Alarm.class).findAll().size());
     }
 
     @Override
@@ -71,7 +79,7 @@ public class AlarmRepository implements IAlarmRepository{
 
     @Override
     public Alarm getAlarm(long alarmId) {
-        return null;
+        return mRealm.copyFromRealm(mRealm.where(Alarm.class).equalTo("mId", alarmId).findFirst());
     }
 
     @Override

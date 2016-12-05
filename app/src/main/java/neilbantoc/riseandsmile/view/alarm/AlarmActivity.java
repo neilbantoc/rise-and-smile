@@ -49,13 +49,14 @@ import neilbantoc.riseandsmile.R;
 import neilbantoc.riseandsmile.contract.alarmlist.AlarmScreen;
 import neilbantoc.riseandsmile.facetracker.SleepyFaceListener;
 import neilbantoc.riseandsmile.facetracker.SleepyFaceTracker;
+import neilbantoc.riseandsmile.model.AlarmRepository;
 import neilbantoc.riseandsmile.presenter.alarm.AlarmActivityPresenter;
 import neilbantoc.riseandsmile.service.AlarmService;
 import neilbantoc.riseandsmile.view.BaseActivity;
 import neilbantoc.riseandsmile.view.custom.CameraSourcePreview;
 import neilbantoc.riseandsmile.view.custom.CircularProgressBar;
 
-public final class AlarmActivity extends BaseActivity implements AlarmScreen.View{
+public final class AlarmActivity extends BaseActivity implements AlarmScreen.View, View.OnClickListener {
     private static final String EXTRA_IS_TUTORIAL = "extra_tutorial";
 
     private static final String TAG = "AlarmActivity";
@@ -86,7 +87,9 @@ public final class AlarmActivity extends BaseActivity implements AlarmScreen.Vie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_alarm);
 
-        AlarmService.start(this);
+        long alarmId = getIntent().hasExtra(AlarmRepository.EXTRA_ALARM_ID) ? getIntent().getLongExtra(AlarmRepository.EXTRA_ALARM_ID, -1) : -1;
+        Log.d(TAG, "onCreate: Has Extra Alarm Id: " + alarmId);
+        AlarmService.start(this, alarmId);
 
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mTimeBar = (CircularProgressBar) findViewById(R.id.timeBar);
@@ -94,6 +97,8 @@ public final class AlarmActivity extends BaseActivity implements AlarmScreen.Vie
 
         mVolumeBar = (CircularProgressBar) findViewById(R.id.volumeBar);
         mVolumeBar.setMax(PROGRESS_BAR_RANGE);
+
+        findViewById(R.id.fab_help).setOnClickListener(this);
 
         mPresenter = new AlarmActivityPresenter(this);
 
@@ -184,7 +189,6 @@ public final class AlarmActivity extends BaseActivity implements AlarmScreen.Vie
             mCameraSource.release();
         }
         ((AlarmActivityPresenter)mPresenter).resetAnimators();
-        AlarmService.stop(this);
     }
 
     @Override
@@ -260,8 +264,8 @@ public final class AlarmActivity extends BaseActivity implements AlarmScreen.Vie
     @Override
     public void closeAlarmScreen() {
         Toast.makeText(this, R.string.alarm_end_prompt, Toast.LENGTH_LONG).show();
-        AlarmService.stop(this);
         finish();
+        AlarmService.stop(this);
     }
 
     public void showVolumeLevel(float volume) {
@@ -358,5 +362,10 @@ public final class AlarmActivity extends BaseActivity implements AlarmScreen.Vie
         Intent intent = new Intent(context, AlarmActivity.class);
         intent.putExtra(EXTRA_IS_TUTORIAL, true);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View view) {
+        new AlertDialog.Builder(this).setTitle(R.string.title_keep_eyes_open).setMessage(R.string.message_alarm_activity_help).show();
     }
 }
