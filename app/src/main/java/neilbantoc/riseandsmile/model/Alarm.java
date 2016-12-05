@@ -33,7 +33,13 @@ public class Alarm extends RealmObject{
     public static Comparator<Alarm> SORTER = new Comparator<Alarm>() {
         @Override
         public int compare(Alarm alarm, Alarm t1) {
-            return (int) (alarm.getTime() % DAY_IN_MILLIS - t1.getTime() % DAY_IN_MILLIS);
+            GregorianCalendar time1 = alarm.getTimeAsCalendar();
+            GregorianCalendar time2 = t1.getTimeAsCalendar();
+
+            int minutes1 = (time1.get(Calendar.HOUR_OF_DAY) * 60) + time1.get(Calendar.MINUTE);
+            int minutes2 = (time2.get(Calendar.HOUR_OF_DAY) * 60) + time2.get(Calendar.MINUTE);
+
+            return minutes1 - minutes2;
         }
     };
 

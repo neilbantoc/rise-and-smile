@@ -112,7 +112,7 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
         mPlayer.setOnCompletionListener(this);
 
         // initialize player settings
-        mPlayer.setVolume(0.0f, 0.0f);
+        mPlayer.setVolume(1.0f, 1.0f);
         mPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
         mPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
         mPlayer.setLooping(true);
