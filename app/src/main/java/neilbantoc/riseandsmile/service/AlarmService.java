@@ -69,6 +69,7 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
             mLevel = intent.getFloatExtra(EXTRA_LEVEL, mLevel);
             if (mPlayerPrepared) {
                 mPlayer.setVolume(mLevel, mLevel);
+//                mPlayer.setVolume(0, 0);
             }
         }
     };
@@ -144,6 +145,7 @@ public class AlarmService extends Service implements MediaPlayer.OnPreparedListe
 
         // initialize player settings
         mPlayer.setVolume(1.0f, 1.0f);
+//        mPlayer.setVolume(0, 0);
         mPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
         mPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
         mPlayer.setLooping(true);

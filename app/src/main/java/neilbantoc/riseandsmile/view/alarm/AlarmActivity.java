@@ -25,13 +25,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -60,11 +64,8 @@ public final class AlarmActivity extends BaseActivity implements AlarmScreen.Vie
     private static final String EXTRA_IS_TUTORIAL = "extra_tutorial";
 
     private static final String TAG = "AlarmActivity";
-
     private static final int RC_HANDLE_GMS = 9001;
-
     private static final int RC_HANDLE_CAMERA_PERM = 2;
-
     private static final int PROGRESS_BAR_RANGE = 1000;
 
     private BroadcastReceiver mCancelAlarmActivityLaunchReceiver = new BroadcastReceiver() {
@@ -80,16 +81,25 @@ public final class AlarmActivity extends BaseActivity implements AlarmScreen.Vie
     private CircularProgressBar mTimeBar;
     private CircularProgressBar mVolumeBar;
 
-    private AlarmScreen.UserActionsCallback mPresenter;
+    private ImageView mVolumeIcon;
+    private ImageView mAwakeIcon;
+
+    private Drawable mEyePresentDrawable;
+    private Drawable mEyeMissingDrawable;
+    private Drawable mVolumeUp;
+    private Drawable mVolumeMid;
+    private Drawable mVolumeMute;
+
+
+    private AlarmActivityPresenter mPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_alarm);
 
-        long alarmId = getIntent().hasExtra(AlarmRepository.EXTRA_ALARM_ID) ? getIntent().getLongExtra(AlarmRepository.EXTRA_ALARM_ID, -1) : -1;
-        Log.d(TAG, "onCreate: Has Extra Alarm Id: " + alarmId);
-        AlarmService.start(this, alarmId);
+        mVolumeIcon = (ImageView) findViewById(R.id.icon_volume);
+        mAwakeIcon = (ImageView) findViewById(R.id.icon_eye);
 
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mTimeBar = (CircularProgressBar) findViewById(R.id.timeBar);
@@ -98,9 +108,19 @@ public final class AlarmActivity extends BaseActivity implements AlarmScreen.Vie
         mVolumeBar = (CircularProgressBar) findViewById(R.id.volumeBar);
         mVolumeBar.setMax(PROGRESS_BAR_RANGE);
 
+        mEyeMissingDrawable = getIcon(R.drawable.ic_visibility_off_black_24dp);
+        mEyePresentDrawable = getIcon(R.drawable.ic_visibility_black_24dp);
+        mVolumeMute = getIcon(R.drawable.ic_volume_mute_black_24dp);
+        mVolumeMid = getIcon(R.drawable.ic_volume_down_black_24dp);
+        mVolumeUp = getIcon(R.drawable.ic_volume_up_black_24dp);
+
         findViewById(R.id.fab_help).setOnClickListener(this);
 
         mPresenter = new AlarmActivityPresenter(this);
+
+        long alarmId = getIntent().hasExtra(AlarmRepository.EXTRA_ALARM_ID) ? getIntent().getLongExtra(AlarmRepository.EXTRA_ALARM_ID, -1) : -1;
+        Log.d(TAG, "onCreate: Has Extra Alarm Id: " + alarmId);
+        AlarmService.start(this, alarmId);
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
@@ -111,6 +131,16 @@ public final class AlarmActivity extends BaseActivity implements AlarmScreen.Vie
             requestCameraPermission();
         }
 
+    }
+
+    private Drawable getIcon(int resId) {
+        Drawable icon;
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            icon = VectorDrawableCompat.create(getResources(), resId, getTheme());
+        } else {
+            icon = getResources().getDrawable(resId, getTheme());
+        }
+        return icon;
     }
 
     /**
@@ -188,7 +218,7 @@ public final class AlarmActivity extends BaseActivity implements AlarmScreen.Vie
         if (mCameraSource != null) {
             mCameraSource.release();
         }
-        ((AlarmActivityPresenter)mPresenter).resetAnimators();
+        mPresenter.resetAnimators();
     }
 
     @Override
@@ -254,6 +284,9 @@ public final class AlarmActivity extends BaseActivity implements AlarmScreen.Vie
 
     public void showAwakeLevel(float value) {
         mTimeBar.setProgress(value * PROGRESS_BAR_RANGE);
+        if (mPresenter != null) {
+            mAwakeIcon.setImageDrawable(mPresenter.getState() == AlarmActivityPresenter.STATE_AWAKE ? mEyePresentDrawable : mEyeMissingDrawable);
+        }
     }
 
     @Override
@@ -270,6 +303,14 @@ public final class AlarmActivity extends BaseActivity implements AlarmScreen.Vie
 
     public void showVolumeLevel(float volume) {
         mVolumeBar.setProgress(volume * PROGRESS_BAR_RANGE);
+
+        Drawable drawable = volume > 0.5
+                ? mVolumeUp
+                : volume > 0
+                    ? mVolumeMid
+                    : mVolumeMute;
+
+        mVolumeIcon.setImageDrawable(drawable);
     }
 
     //==============================================================================================
@@ -358,14 +399,15 @@ public final class AlarmActivity extends BaseActivity implements AlarmScreen.Vie
         }
     }
 
-    public static void showTutorial(Context context) {
-        Intent intent = new Intent(context, AlarmActivity.class);
-        intent.putExtra(EXTRA_IS_TUTORIAL, true);
-        context.startActivity(intent);
-    }
 
     @Override
     public void onClick(View view) {
         new AlertDialog.Builder(this).setTitle(R.string.title_keep_eyes_open).setMessage(R.string.message_alarm_activity_help).show();
+    }
+
+    public static void showTutorial(Context context) {
+        Intent intent = new Intent(context, AlarmActivity.class);
+        intent.putExtra(EXTRA_IS_TUTORIAL, true);
+        context.startActivity(intent);
     }
 }

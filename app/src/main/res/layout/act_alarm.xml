@@ -6,45 +6,79 @@
     android:id="@+id/topLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true"
     android:background="#ffffff"
+    android:keepScreenOn="true"
     android:orientation="vertical">
 
     <neilbantoc.riseandsmile.view.custom.CameraSourcePreview
         android:id="@+id/preview"
-        android:layout_centerInParent="true"
         android:layout_width="144dp"
-        android:layout_height="144dp"/>
+        android:layout_height="144dp"
+        android:layout_above="@+id/anchor"
+        android:layout_centerHorizontal="true"/>
 
     <neilbantoc.riseandsmile.view.custom.CircularMask
-        android:layout_centerInParent="true"
         android:layout_width="144dp"
-        android:layout_height="144dp"/>
+        android:layout_height="144dp"
+        android:layout_above="@+id/anchor"
+        android:layout_centerHorizontal="true"/>
+
+    <View
+        android:id="@+id/anchor"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_centerInParent="true"/>
 
     <neilbantoc.riseandsmile.view.custom.CircularProgressBar
         android:id="@+id/timeBar"
-        android:layout_width="176dp"
-        android:layout_height="176dp"
-        android:layout_centerInParent="true"
-        app:progressBarThickness="16dp"
-        app:progressBarColor="@color/colorPrimary"/>
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_below="@+id/anchor"
+        android:layout_margin="16dp"
+        android:layout_toLeftOf="@id/anchor"
+        app:progressBarColor="@color/colorPrimary"
+        app:progressBarThickness="8dp"/>
+
+    <ImageView
+        android:id="@+id/icon_eye"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/timeBar"
+        android:layout_alignLeft="@+id/timeBar"
+        android:layout_alignRight="@+id/timeBar"
+        android:layout_alignTop="@+id/timeBar"
+        android:layout_margin="16dp"
+        app:srcCompat="@drawable/ic_visibility_off_black_24dp"/>
 
     <neilbantoc.riseandsmile.view.custom.CircularProgressBar
         android:id="@+id/volumeBar"
-        android:layout_width="188dp"
-        android:layout_height="188dp"
-        android:layout_centerInParent="true"
-        app:progressBarThickness="6dp"
-        app:progressBarColor="@color/colorAccent"/>
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_below="@+id/anchor"
+        android:layout_margin="16dp"
+        android:layout_toRightOf="@id/anchor"
+        app:progressBarColor="@color/colorAccent"
+        app:progressBarThickness="8dp"/>
+
+    <ImageView
+        android:id="@+id/icon_volume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/volumeBar"
+        android:layout_alignLeft="@+id/volumeBar"
+        android:layout_alignRight="@+id/volumeBar"
+        android:layout_alignTop="@+id/volumeBar"
+        android:layout_margin="16dp"
+        app:srcCompat="@drawable/ic_volume_mute_black_24dp"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_help"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        app:srcCompat="@drawable/ic_help_outline_white_24dp"
-        android:layout_marginRight="32dp"
         android:layout_marginBottom="40dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_marginRight="32dp"
+        app:srcCompat="@drawable/ic_help_outline_white_24dp"/>
 
 </RelativeLayout>

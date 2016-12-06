@@ -14,15 +14,15 @@ import neilbantoc.riseandsmile.facetracker.SleepyFaceListener;
 
 public class AlarmActivityPresenter implements SleepyFaceListener, AlarmScreen.UserActionsCallback{
     private static final String TAG = AlarmActivityPresenter.class.getSimpleName();
-    private static final int STATE_MISSING = 0x00;
-    private static final int STATE_AWAKE = 0x01;
-    private static final int STATE_SLEEPING = 0x02;
+    public static final int STATE_MISSING = 0x00;
+    public static final int STATE_AWAKE = 0x01;
+    public static final int STATE_SLEEPING = 0x02;
 
     private static final long CLOSED_EYES_TIMEOUT = (long) (0.01f * 1000); // threshold for determining a blink vs dozing off
     private static final long AWAKE_ANIMATION_DURATION = 10 * 1000; // number of seconds the user must stay awake
-    private static final long VOLUME_ANIMATION_DURATION = 4 * 1000; // how long the volume animates from ringing to silent
+    private static final long VOLUME_ANIMATION_DURATION = 3 * 1000; // how long the volume animates from ringing to silent
     private static final long RESET_ANIMATION_DURATION = 8 * 1000; // how long both the awake progress and the volume progress animate back to 100% from its current value
-    private static final int RESET_VOLUME_SCALE = 4; // how faster the volume animates back to 100% compared to the awake progress when resetting
+    private static final int RESET_VOLUME_SCALE = 5; // how faster the volume animates back to 100% compared to the awake progress when resetting
 
     private AlarmScreen.View mView;
 
@@ -192,5 +192,9 @@ public class AlarmActivityPresenter implements SleepyFaceListener, AlarmScreen.U
         mVolumeProgress = value;
         mView.showVolumeLevel(value);
         mView.changeVolume(value);
+    }
+
+    public int getState() {
+        return mState;
     }
 }

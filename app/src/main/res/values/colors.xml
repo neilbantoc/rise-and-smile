@@ -10,4 +10,7 @@
 
     <color name="colorAccentPink">#F40076</color>
     <color name="colorAccentOrange">#ff6700</color>
+
+    <color name="icon_active_black">#ff000000</color>
+    <color name="icon_inactive_black">#66000000</color>
 </resources>
