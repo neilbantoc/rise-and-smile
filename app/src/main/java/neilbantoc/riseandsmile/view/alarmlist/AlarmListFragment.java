@@ -99,7 +99,7 @@ public class AlarmListFragment extends Fragment implements AlarmList.View, Dialo
 
     @Override
     public void refreshAlarmList() {
-        mAdapter.notifyDataSetChanged();
+        mAdapter.refreshList();
     }
 
     @Override

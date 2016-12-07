@@ -42,14 +42,12 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.Alar
 
     public void add(Alarm alarm) {
         mAlarms.add(alarm);
-        Collections.sort(mAlarms, Alarm.SORTER);
-        notifyDataSetChanged();
+        refreshList();
     }
 
     public void addAll(Collection<Alarm> alarms) {
         mAlarms.addAll(alarms);
-        Collections.sort(mAlarms, Alarm.SORTER);
-        notifyDataSetChanged();
+        refreshList();
     }
 
     public Alarm getAlarmAt(int index) {
@@ -58,6 +56,11 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.Alar
 
     public void clearAlarms() {
         mAlarms.clear();
+        refreshList();
+    }
+
+    public void refreshList() {
+        Collections.sort(mAlarms, Alarm.SORTER);
         notifyDataSetChanged();
     }
 

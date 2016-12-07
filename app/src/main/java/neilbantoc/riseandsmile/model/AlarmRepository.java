@@ -5,10 +5,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.SystemClock;
 
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 import neilbantoc.riseandsmile.App;
 import neilbantoc.riseandsmile.contract.repository.IAlarmRepository;
 import neilbantoc.riseandsmile.view.alarm.AlarmActivity;
@@ -18,11 +20,6 @@ import neilbantoc.riseandsmile.view.alarm.AlarmActivity;
  */
 
 public class AlarmRepository implements IAlarmRepository{
-    public static final String EXTRA_ALARM_ID = "alarm_id";
-    private static final String TAG = AlarmRepository.class.getSimpleName();
-
-    private static final int REQUEST_CODE = 0x01;
-
     private PendingIntent mPendingIntent;
     private AlarmManager mManager;
     private Realm mRealm;
@@ -37,8 +34,7 @@ public class AlarmRepository implements IAlarmRepository{
 
     private PendingIntent updatePendingIntent(Alarm alarm) {
         Intent intent = new Intent(mContext, AlarmActivity.class);
-        intent.putExtra(EXTRA_ALARM_ID, alarm.getId());
-        mPendingIntent = PendingIntent.getActivity(mContext, REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mPendingIntent = PendingIntent.getActivity(mContext, (int) alarm.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return mPendingIntent;
     }
 
@@ -74,6 +70,16 @@ public class AlarmRepository implements IAlarmRepository{
     public void deleteAlarm(Alarm alarm) {
         mRealm.beginTransaction();
         mRealm.where(Alarm.class).equalTo("mId", alarm.getId()).findAll().deleteAllFromRealm();
+        mRealm.commitTransaction();
+    }
+
+    @Override
+    public void deactivatePastAlarms() {
+        mRealm.beginTransaction();
+        RealmResults<Alarm> pastAlarms = mRealm.where(Alarm.class).lessThan("mTime", System.currentTimeMillis()).findAll();
+        for (Alarm alarm: pastAlarms) {
+            alarm.setActive(false);
+        }
         mRealm.commitTransaction();
     }
 

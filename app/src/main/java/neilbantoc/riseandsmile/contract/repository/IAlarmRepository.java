@@ -14,6 +14,7 @@ public interface IAlarmRepository {
     void createAlarm(Alarm alarm);
     void updateAlarm(Alarm alarm);
     void deleteAlarm(Alarm alarm);
+    void deactivatePastAlarms();
     Alarm getAlarm(long alarmId);
     List<Alarm> getAllAlarms();
 }

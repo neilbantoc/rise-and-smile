@@ -118,9 +118,7 @@ public final class AlarmActivity extends BaseActivity implements AlarmScreen.Vie
 
         mPresenter = new AlarmActivityPresenter(this);
 
-        long alarmId = getIntent().hasExtra(AlarmRepository.EXTRA_ALARM_ID) ? getIntent().getLongExtra(AlarmRepository.EXTRA_ALARM_ID, -1) : -1;
-        Log.d(TAG, "onCreate: Has Extra Alarm Id: " + alarmId);
-        AlarmService.start(this, alarmId);
+        AlarmService.start(this);
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
