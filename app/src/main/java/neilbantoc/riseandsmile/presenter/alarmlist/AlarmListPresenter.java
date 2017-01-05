@@ -63,6 +63,7 @@ public class AlarmListPresenter implements AlarmList.UserActionCallback{
     @Override
     public void onDeleteAlarmClick(Alarm alarm) {
         mRepository.deleteAlarm(alarm);
+        mRepository.disarmAlarm(alarm);
         refreshList(true);
     }
 
@@ -79,6 +80,8 @@ public class AlarmListPresenter implements AlarmList.UserActionCallback{
         if (alarm.isActive()) {
             mRepository.armAlarm(alarm);
             mView.showNextAlarmTime(alarm);
+        } else {
+            mRepository.disarmAlarm(alarm);
         }
     }
 
